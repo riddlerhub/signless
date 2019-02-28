@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Signless</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=ZCOOL+QingKe+HuangYou" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}" />
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    
+    <!-- Minified Socket IO library from content delivery network -->
+    <script type="text/javascript" src="{{ url_for('static', filename='socket.io.min.js') }}"></script>
+
+</head>
+<body>
+    <div class="game">
+        <div class="headerview">
+            <h1 class="header"> Signless</h1>
+
+        </div>
+        <div class="mainview">
+            <div class="leftview">
+                <div class="gameboard">
+                    <canvas id="gamecanvas" width="520" height="520"></canvas>
+                </div>
+                <div class="topbox">
+                    <div class="actionbtns">
+
+                        <button id="suggestButton" class="btn btn-primary btn-sm" onclick="suggestPreparations()" style="display:none">Make Suggestion</button>
+                        <button id="accuseButton" class="btn btn-primary btn-sm" onclick="accusePreparations()" style="display:none">Make Accusation</button>
+                        <button id="endTurnButton" class="btn btn-danger btn-sm" onclick="endTurn()" style="display:none">End Turn</button>
+                        <select id="weaponsList" style="display:none">
+                            <option value="candlestick">Candlestick</option>
+                            <option value="revolver">Revolver</option>
+                            <option value="rope">Rope</option>
+                            <option value="wrench">Wrench</option>
+                            <option value="lead_pipe">Lead Pipe</option>
+                            <option value="knife">Knife</option>
+                        </select>
+                        <select id="suspectsList" style="display:none">
+                            <option value="white">White</option>
+                            <option value="peacock">Peacock</option>
+                            <option value="scarlet">Scarlet</option>
+                            <option value="mustard">Mustard</option>
+                            <option value="green">Green</option>
+                            <option value="plum">Plum</option>
+                        </select>
+                        <select id="disproveCards" style="display:none"></select>
+                        <button id="disproveButton" class="btn btn-primary btn-sm" onclick="disprove()" style="display:none">Disprove</button>
+                        <button id="submitSuggestion" class="btn btn-success btn-sm" onclick="suggest()" style="display:none" >Submit Suggestion</button>
+                        <button id="submitAccusation" class="btn btn-success btn-sm" onclick="accuse()" style="display:none" >Submit Accusation</button>
+
+                    </div>
+                </div>
+
+
+                <div class="topbox-white">
+                    <label class="label"><i class="fa fa-id-card"></i> Current Cards</label>
+                    <div id="cards"></div>
+                </div>
+            </div>
+            <div class="sidebar">
+                <form id="playerNamePrompt" class="sidebox">
+                    <label class="label"><i class="fa fa-user"></i> Enter your player name</label>
+                    <input type="text" id="playerName" class="form-control" name="playerName" placeholder="Player Name" />
+                    <button id="joinGame" class="btn btn-primary">Join Game</button>
+                    <div id="playerNamePromptErr"></div>
+                </form>
+                <div class="sidebox">
+                    <label class="label"><i class="fa fa-pencil"></i> Actions</label>
+                    <button id="startGameButton" class="btn btn-success btn-sm" onclick="startGame()" style="display:none">Start Game</button>
+                    <button id="resetGameButton" class="btn btn-success btn-sm" onclick="resetGame()"  style="display:none">Reset Game</button>
+                </div>
+                <div class="sidebox">
+                    <label class="label"><i class="fa fa-gamepad"></i> Current Room</label>
+                    <div id="room">No players currently</div>
+                </div>
+                <div class="sidebox">
+                    <label class="label"><i class="fa fa-info-circle"></i> Current Status</label>
+                    <div id="status"></div>
+                </div>
+                <div class="sidebox">
+                    <label class="label"><i class="fa fa-id-card"></i> Alerts </label>
+                    <div id="alerts" style="overflow-y: auto; height:100px;"></div>
+                </div>
+                <div id="playerLocations" class="sidebox">
+                    <label class="label"><i class="fa fa-user"></i> Player Locations</label>
+                    <div id="playerLocationsInner"></div>
+                </div>
+            </div>
+        </div>        
+    </div>
+    <script type="text/javascript" src="{{ url_for('static', filename='client.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='movement.js') }}"></script>
+
+    
+</body>
+</html>
