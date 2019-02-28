@@ -140,6 +140,7 @@ function startGame() {
     }
     hideAll();
     showButton("resetGameButton");
+    showButton("resetGameButton");
     socket.send(JSON.stringify(sendObjToServer))
 }
 
