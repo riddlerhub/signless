@@ -2,7 +2,7 @@
 body {
     font-family: 'Roboto Condensed', sans-serif;
     font-size: 20px;
-    background: url(images/bgblurred.jpg) no-repeat center center fixed;
+    background-color: #000;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -104,7 +104,7 @@ textarea {
 }
 .header {
     margin: 20px auto;
-    color: #000000;
+    color: #fff;
     margin-bottom: 5px;
     font-family: 'ZCOOL QingKe HuangYou', cursive;
     font-size: 3em;

@@ -1,4 +1,4 @@
-global_game_state = {
+ggs = {
     "players": [], "turn": 0, "current_player": "", "player_cards": {}, "current_suggestion": {}, "can_disprove": {}, "disproving_player": "",
     "can_accuse": {}, "accusation": {}, "solution": {}, "game_ended": False }
 

@@ -1,88 +1,50 @@
-import json,random,sys
+import random,sys
+from core import generate
+from core import setter
+generate = generate.generate()
+setter = setter.Setter()
 
 
 class Handler:
     def __init__(self, global_game_state):
         self.ggs = global_game_state
+        self.assocs = {}
+        self.assoc_chars = []
+        self.unassigned = []
 
     def take_action_join_game(self, action_gave):
-        player_name = action_gave["payload"]["playerName"]
+        player_name = setter.set_player_name(action_gave)
         if not player_name in self.ggs["players"]:
 
             if len(self.ggs["players"]) < 6:
                 self.ggs["players"].append(player_name)
-                response_dict = {
-                    "responseToken": "PLAYER_JOINED_GAME",
-                    "payload": player_name,
-                    "gameState": self.ggs
-                }
-                resp = json.dumps(response_dict)
+                resp = generate.generate_player_joined_game_resp(player_name, self.ggs)
             else:
-                response_dict = {
-                    "responseToken": "MAXIMUM_PLAYER_REACHED",
-                    "payload": player_name,
-                    "gameState": self.ggs
-                }
-                resp = json.dumps(response_dict)
+                resp = generate.generate_maximum_player_reached_resp(player_name, self.ggs)
         else:
-            response_dict = {
-                "responseToken": "PLAYER_ALREADY_JOINED",
-                "payload": player_name,
-                "gameState": self.ggs
-            }
-            resp = json.dumps(response_dict)
+            resp = generate.generate_player_already_joined(player_name, self.ggs)
         return resp
 
     def take_action_reset_game(self, action_gave):
-        global_game_state = {
-            "players": [],
-            "turn": 0,
-            "current_player": "",
-            "player_cards": dict(),
-            "current_suggestion": dict(),
-            "can_disprove": dict(),
-            "disproving_player": "",
-            "can_accuse": dict(),
-            "accusation": dict(),
-            "solution": dict(),
-            "game_ended": False
-        }
-        response_dict = {
-            "responseToken": "CLEARED_GAME_STATE",
-            "payload": "Cleared game state",
-            "gameState": global_game_state
-        }
-        resp = json.dumps(response_dict)
+        resp = generate.generate_cleared_game_state_resp()
         return resp
 
     def take_action_reset_game(self):
-
         for player in self.ggs["players"]:
             self.ggs["can_accuse"][player] = True;
 
-        print(self.ggs)
-
         self.ggs["current_player"] = self.ggs["players"][0]
-        response_dict = {
-            "responseToken": "GAME_STARTED_STATE",
-            "payload": "Game Started",
-            "gameState": self.ggs
-        }
-        resp = json.dumps(response_dict)
+        resp = generate.generate_game_started_state_resp(self.ggs)
         return resp
 
     def take_action_end_turn(self, action_gave):
-        self.ggs["movement_info"]["current_locations"] = action_gave["payload"]["current_locations"]
-        self.ggs["solution"] = dict()
+        self.ggs["movement_info"]["current_locations"] = setter.set_current_location(action_gave)
+        self.ggs["solution"] = {}
         self.ggs["turn"] += 1
         self.ggs["current_player"] = self.ggs["players"][
             self.ggs["turn"] % len(self.ggs["players"])]
-        response_dict = {
-            "responseToken": "SUGGEST_STATE",
-            "payload": "Turn Ended",
-            "gameState": self.ggs
-        }
-        resp = json.dumps(response_dict)
+
+        resp = generate.generate_suggest_state_resp(self.ggs)
         return resp
 
     def take_action_suggest(self, action_gave):
@@ -125,12 +87,7 @@ class Handler:
             self.ggs["players"])
         self.ggs["disproving_player"] = self.ggs["players"][next_player_index]
 
-        response_dict = {
-            "responseToken": "PRE_DISPROVE",
-            "payload": "Pre Disprove State",
-            "gameState": self.ggs
-        }
-        resp = json.dumps(response_dict)
+        resp = generate.generate_pre_disprove_resp(self.ggs)
         return resp
 
     def take_action_disprove(self, action_gave):
@@ -140,31 +97,16 @@ class Handler:
                 self.ggs["players"])
             self.ggs["disproving_player"] = self.ggs["players"][next_player_index]
             if not self.ggs["disproving_player"] == self.ggs["current_player"]:
-                response_dict = {
-                    "responseToken": "DISPROVE_STATE",
-                    "payload": "Disprove State",
-                    "gameState": self.ggs
-                }
-                resp = json.dumps(response_dict)
+                resp = generate.generate_disprove_state_resp(self.ggs)
             else:
                 print("No player can disprove {}".format(self.ggs["current_player"]))
-                self.ggs["can_disprove"] = dict()
-                response_dict = {
-                    "responseToken": "ACCUSE_STATE",
-                    "payload": "disproveFailed",
-                    "gameState": self.ggs
-                }
-                resp = json.dumps(response_dict)
+                self.ggs["can_disprove"] = {}
+                resp = generate.geneerate_accuse_state_resp(self.ggs)
 
         else:
             print("{} can disprove using {}".format(self.ggs["disproving_player"], disprove_value))
-            self.ggs["can_disprove"] = dict()
-            response_dict = {
-                "responseToken": "ACCUSE_STATE",
-                "payload": "{} disproved you using {}".format(self.ggs["disproving_player"], disprove_value),
-                "gameState": self.ggs
-            }
-            resp = json.dumps(response_dict)
+            self.ggs["can_disprove"] = {}
+            resp = generate.generate_accuse_state_resp(self.ggs)
         return resp
 
     def take_action_accuse(self,action_gave,solution):
@@ -179,12 +121,7 @@ class Handler:
         if solution["weapon"] == action_gave["weapon"] and solution["suspect"] == action_gave["suspect"] and solution[
             "room"] == action_gave["room"]:
             self.ggs["game_ended"] = True
-            response_dict = {
-                "responseToken": "ACCUSE_SUCCESS",
-                "payload": "Accuse Success",
-                "gameState": self.ggs
-            }
-            resp = json.dumps(response_dict)
+            resp = generate.generate_accuse_success_resp(self.ggs)
 
         else:
             self.ggs["can_accuse"][self.ggs["current_player"]] = False
@@ -193,41 +130,28 @@ class Handler:
 
             print(self.ggs["game_ended"])
             self.ggs["solution"] = solution
-            response_dict = {
-                "responseToken": "ACCUSE_FAILURE",
-                "payload": "Accuse Failure",
-                "gameState": self.ggs
-            }
-            resp = json.dumps(response_dict)
+
+            resp = generate.generate_accuse_failure_resp(self.ggs)
         return resp
 
     def take_action_undefined(self):
-        response_dict = {
-            "responseToken": "UNIDENTIFIED_ACTION",
-            "payload": "Unidentified action",
-            "gameState": self.ggs
-        }
-        resp = json.dumps(response_dict)
+        resp = generate.generate_unidentified_action(self.ggs)
         return resp
 
     def init_card_state(self, solution, guns, rooms, suspects):
-        self.ggs["player_cards"] = dict()
+        self.ggs["player_cards"] = {}
 
-        random.shuffle(guns)
-        random.shuffle(rooms)
-        random.shuffle(suspects)
+        self.random_shuffle_guns_suspects_rooms(guns, suspects,rooms)
 
         solution["weapon"] = guns[0]
         solution["room"] = rooms[0]
         solution["suspect"] = suspects[0]
 
-        combined_cards = guns[1:len(guns)] + rooms[1:len(rooms)] + suspects[1:len(suspects)]
-        print(solution)
+        combined_cards = setter.set_combined_cards(guns, rooms, suspects)
+        self.random_shuffle_cards(combined_cards)
 
-        random.shuffle(combined_cards)
-
-        r = len(combined_cards) % len(self.ggs["players"])
-        q = len(combined_cards) / len(self.ggs["players"])
+        r = generate.generate_r(combined_cards)
+        q = generate.generate_q(combined_cards)
         start = 0
         stop = q
         for player in self.ggs["players"]:
@@ -240,37 +164,34 @@ class Handler:
 
     def init_move_state(self):
         initial_state = self.ggs
-        assocs = {}
-        assoc_chars = []
-        unassigned = []
         try:
-            starting_locations = {
-                "plum": {"x": 112, "y": 158},
-                "white": {"x": 360, "y": 384},
-                "peacock": {"x": 114, "y": 356},
-                "green": {"x": 167, "y": 384},
-                "scarlet": {"x": 351, "y": 107},
-                "mustard": {"x": 411, "y": 168}
-            }
-
+            bl = setter.set_begining_locations()
             index = 0
-            characters = starting_locations.keys()
+            characters = bl.keys()
 
             for player in self.ggs["players"]:
-                assocs[player] = characters[index]
-                assoc_chars.append(characters[index])
+                self.assocs[player] = characters[index]
+                self.assoc_chars.append(characters[index])
                 index += 1
 
-            if not len(assocs) == len(characters):
+            if not len(self.assocs) == len(characters):
                 for index in range(len(characters)):
-                    if not characters[index] in assoc_chars:
-                        unassigned.append(characters[index])
+                    if not characters[index] in self.assoc_chars:
+                        self.unassigned.append(characters[index])
             self.ggs["movement_info"] = {
-                "associations": assocs,
-                "current_locations": starting_locations,
-                "unassigned_characters": unassigned
+                "associations": self.assocs,
+                "current_locations": bl,
+                "unassigned_characters": self.unassigned
             }
             return self.ggs
         except:
             print("Unexpected error:", sys.exc_info()[0])
             return initial_state
+
+    def random_shuffle_guns_suspects_rooms(self,guns,suspects,rooms):
+        random.shuffle(guns)
+        random.shuffle(rooms)
+        random.shuffle(suspects)
+
+    def random_shuffle_cards(self, combined_cards):
+        random.shuffle(combined_cards)
