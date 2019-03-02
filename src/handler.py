@@ -101,7 +101,7 @@ class Handler:
             else:
                 print("No player can disprove {}".format(self.ggs["current_player"]))
                 self.ggs["can_disprove"] = {}
-                resp = generate.geneerate_accuse_state_resp(self.ggs)
+                resp = generate.generate_accuse_state_resp(self.ggs)
 
         else:
             print("{} can disprove using {}".format(self.ggs["disproving_player"], disprove_value))
@@ -150,8 +150,8 @@ class Handler:
         combined_cards = setter.set_combined_cards(guns, rooms, suspects)
         self.random_shuffle_cards(combined_cards)
 
-        r = generate.generate_r(combined_cards)
-        q = generate.generate_q(combined_cards)
+        r = generate.generate_r(self.ggs,combined_cards)
+        q = generate.generate_q(self.ggs,combined_cards)
         start = 0
         stop = q
         for player in self.ggs["players"]:

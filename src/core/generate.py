@@ -69,7 +69,7 @@ class generate:
     def generate_accuse_state_resp(self, ggs):
         resp = {
             "responseToken": self.resTokens['as'],
-            "payload": "{} disproved you using {}".format(self.ggs["disproving_player"]),
+            "payload": "{} disproved you using ".format(ggs["disproving_player"]),
             "gameState": ggs
         }
         return json.dumps(resp)
@@ -102,15 +102,15 @@ class generate:
         resp = {
             "responseToken": self.resTokens['ds'],
             "payload": self.payloadStrs['ds'],
-            "gameState": self.ggs
+            "gameState": ggs
         }
         return json.dumps(resp)
 
-    def geneerate_accuse_state_resp(self, ggs):
+    def generate_accuse_state_resp(self, ggs):
         resp = {
             "responseToken": self.resTokens['as'],
             "payload": self.payloadStrs['df'],
-            "gameState": self.ggs
+            "gameState": ggs
         }
         return json.dump(resp)
 
@@ -130,8 +130,8 @@ class generate:
         }
         return ggs
 
-    def generate_r(self, combined_cards):
-        return len(combined_cards) % len(self.ggs["players"])
+    def generate_r(self, ggs, combined_cards):
+        return len(combined_cards) % len(ggs["players"])
 
-    def generate_q(self, combined_cards):
-        return len(combined_cards) / len(self.ggs["players"])
+    def generate_q(self, ggs, combined_cards):
+        return len(combined_cards) / len(ggs["players"])
