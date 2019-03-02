@@ -101,7 +101,7 @@ class Handler:
             else:
                 print("No player can disprove {}".format(self.ggs["current_player"]))
                 self.ggs["can_disprove"] = {}
-                resp = generate.generate_accuse_state_resp(self.ggs)
+                resp = generate.generate_accuse_dis_state_resp(self.ggs)
 
         else:
             print("{} can disprove using {}".format(self.ggs["disproving_player"], disprove_value))

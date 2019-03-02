@@ -106,13 +106,13 @@ class generate:
         }
         return json.dumps(resp)
 
-    def generate_accuse_state_resp(self, ggs):
+    def generate_accuse_dis_state_resp(self, ggs):
         resp = {
             "responseToken": self.resTokens['as'],
             "payload": self.payloadStrs['df'],
             "gameState": ggs
         }
-        return json.dump(resp)
+        return json.dumps(resp)
 
     def reset_ggs_payload(self):
         ggs = {
