@@ -30,14 +30,14 @@ def handle_msg(data):
             flask_socketio.send(resp)
 
     elif action_gave["action"] == "RESET_GAME":
-        resp = handler.take_action_reset_game(action_gave)
+        resp = handler.take_action_reset_game()
         flask_socketio.emit('message', resp, broadcast=True)
 
     elif action_gave["action"] == "START_GAME":
         handler.init_card_state(solution, guns, rooms, suspects)
         ggs = handler.init_move_state()
 
-        resp = handler.take_action_reset_game()
+        resp = handler.take_action_start_game()
         flask_socketio.emit('message', resp, broadcast=True)
         
     elif action_gave["action"] == "END_TURN":

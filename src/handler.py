@@ -25,11 +25,11 @@ class Handler:
             resp = generate.generate_player_already_joined(player_name, self.ggs)
         return resp
 
-    def take_action_reset_game(self, action_gave):
+    def take_action_reset_game(self):
         resp = generate.generate_cleared_game_state_resp()
         return resp
 
-    def take_action_reset_game(self):
+    def take_action_start_game(self):
         for player in self.ggs["players"]:
             self.ggs["can_accuse"][player] = True;
 
