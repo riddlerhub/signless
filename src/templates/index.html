@@ -17,7 +17,7 @@
 
 
 </head>
-<body>
+<body onload="playerNamePopUp()">
     <div class="game">
         <div class="headerview">
             <h1 class="header"> Signless</h1>
@@ -65,12 +65,12 @@
                 </div>
             </div>
             <div class="sidebar">
-                <form id="playerNamePrompt" class="sidebox">
+                <!--<form id="playerNamePrompt" class="sidebox">
                     <label class="label"><i class="fa fa-user"></i> Enter your player name</label>
                     <input type="text" id="playerName" class="form-control" name="playerName" placeholder="Player Name" />
                     <button id="joinGame" class="btn btn-primary">Join Game</button>
                     <div id="playerNamePromptErr"></div>
-                </form>
+                </form>-->
                 <div class="sidebox">
                     <label class="label"><i class="fa fa-pencil"></i> Actions</label>
                     <button id="startGameButton" class="btn btn-success btn-sm" onclick="startGame()" style="display:none">Start Game</button>
