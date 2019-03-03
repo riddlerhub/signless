@@ -140,6 +140,7 @@ socket.on("connect", () => {
         o = GLOBAL_CLIENT_STATE.connectedPlayerName;
     switch (statusDiv = document.getElementById("status"), statusDiv.innerHTML = "In " + GLOBAL_CLIENT_STATE.connectedPlayerName + "'s client. Current turn number: " + n.turn + " Current player's turn: " + n.current_player, setCurrentCharacterTurn(n), t.responseToken) {
         case responses.PLAYER_JOINED_GAME:
+            alert("New Player Joined");
             roomDiv = document.getElementById("room"), roomDiv.innerHTML = "";
             let e = n.players.map(e => "<li>" + e + "</li>");
             roomDiv.innerHTML += "<ul>";
